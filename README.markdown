@@ -35,6 +35,7 @@ multiline comment-->markdowntext6<!---unsupported comment-->
 <!---multiline comment
 multiline comment-->markdowntext7<!---multiline comment
 multiline comment-->
+""")
 ```
 
 Results:
