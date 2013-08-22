@@ -5,7 +5,7 @@ A Python-Markdown preprocessor extension to ignore html comments opened by three
 
 Usage Notes
 -----------
-+	This extension does not work with the markdownfromFile function or the convertFile method. They raise a UnicodeDecodeError.
++	This extension does not work with the `markdownfromFile` function or the `convertFile` method. They raise a UnicodeDecodeError.
 
 +	If using multiple extensions, mkdcomments probably should be last in the list. Markdown extensions are loaded into the OrderedDict from which they are executed in the order of the extension list. If a different extension is loaded after mkdcomments, it may insert itself before mkdcomments in the OrderedDict. Undesirable results may ensue. If, for instance, the 'meta' extension is executed before mkdcomments, any comments in the meta-data will be included in meta's dictionary.
 
@@ -38,7 +38,7 @@ multiline comment-->
 ```
 
 Results:
-```python traceback
+```Python Traceback
 >>> import example
 >>> print example.test
 <p>markdowntext1</p>
