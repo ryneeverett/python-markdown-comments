@@ -1,5 +1,5 @@
-markdowncomments
-================
+mkdcomments
+===========
 
 A Python-Markdown preprocessor extension to ignore html comments opened by three dashes (`<!---comment-->`) and any whitespace prior to them. I believe pandoc has similar functionality.
 
