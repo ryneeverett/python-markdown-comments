@@ -38,7 +38,7 @@ multiline comment-->
 ```
 
 Results:
-```Python Traceback
+```
 >>> import example
 >>> print example.test
 <p>markdowntext1</p>
