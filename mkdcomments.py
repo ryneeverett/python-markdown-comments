@@ -52,3 +52,6 @@ class CommentsProcessor(Preprocessor):
             return self._uncommenter(re.sub(r'.*?-->', '', line, count=1))
         else:
             return ['', True]                   # continue multiline
+
+def makeExtension(configs={}):
+    return CommentsExtension(configs=configs)
