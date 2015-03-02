@@ -29,29 +29,28 @@ class CommentsExtension(Extension):
 class CommentsProcessor(Preprocessor):
     def run(self, lines):
         new_lines = []
-        multi = False
+        is_multi = False
         for line in lines:
-            if not multi:
-                multi = self._uncommenter(line)[1]
-                new_lines.append(self._uncommenter(line)[0])
+            if not is_multi:
+                new_line, is_multi = self._uncommenter(line)
             else:
-                multi = self._unmultiliner(line)[1]
-                new_lines.append(self._unmultiliner(line)[0])
+                new_line, is_multi = self._unmultiliner(line)
+            new_lines.append(new_line)
         return new_lines
 
     def _uncommenter(self, line):
         if re.match(r'.*<!---.*-->', line):     # inline(could start multiline)
             return self._uncommenter(re.sub(r'\s*<!---.*?-->', '', line))
         elif re.match(r'.*<!---', line):        # start multiline
-            return [re.sub(r'\s*<!---.*', '', line), True]
+            return (re.sub(r'\s*<!---.*', '', line), True)
         else:                                   # no comment
-            return [line, False]
+            return (line, False)
 
     def _unmultiliner(self, line):
         if re.match(r'.*-->', line):    # end multiline (could start comment)
             return self._uncommenter(re.sub(r'.*?-->', '', line, count=1))
         else:
-            return ['', True]                   # continue multiline
+            return ('', True)                   # continue multiline
 
 def makeExtension(configs={}):
     return CommentsExtension(configs=configs)
