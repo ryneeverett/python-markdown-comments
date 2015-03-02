@@ -39,18 +39,23 @@ class CommentsProcessor(Preprocessor):
         return new_lines
 
     def _uncommenter(self, line):
-        if re.match(r'.*<!---.*-->', line):     # inline(could start multiline)
-            return self._uncommenter(re.sub(r'\s*<!---.*?-->', '', line))
-        elif re.match(r'.*<!---', line):        # start multiline
-            return (re.sub(r'\s*<!---.*', '', line), True)
-        else:                                   # no comment
-            return (line, False)
+        # inline
+        line = re.sub(r'\s*<!---.*?-->', '', line)
+
+        # start multiline
+        line, count = re.subn(r'\s*<!---.*', '', line)
+
+        return line, bool(count)
 
     def _unmultiliner(self, line):
-        if re.match(r'.*-->', line):    # end multiline (could start comment)
-            return self._uncommenter(re.sub(r'.*?-->', '', line, count=1))
+        new_line, count = re.subn(r'.*?-->', '', line, count=1)
+
+        # end multiline
+        if count > 0:
+            return self._uncommenter(new_line)
+        # continue multiline
         else:
-            return ('', True)                   # continue multiline
+            return ('', True)
 
 def makeExtension(configs={}):
     return CommentsExtension(configs=configs)
