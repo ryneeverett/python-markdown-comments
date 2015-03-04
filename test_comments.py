@@ -83,15 +83,8 @@ class TestComments(unittest.TestCase):
                 <!--- test --> testing code blocks
                     <!--- test --> testing 8 spaces
                  <!--- test --> testing 5 spaces
-            </pre>
-            """
-        expected_result = """\
-            <pre>
-                <!--- test --> testing code blocks
-                    <!--- test --> testing 8 spaces
-                 <!--- test --> testing 5 spaces
             </pre>"""
-        self.assertExpectedMarkdown(md_input, expected_result)
+        self.assertExpectedMarkdown(md_input, md_input)
 
 if __name__ == '__main__':
     unittest.main()
