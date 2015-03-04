@@ -22,14 +22,13 @@ Example
 >>> import mkdcomments
 >>> comments = mkdcomments.CommentsExtension()
 >>> markdowner = markdown.Markdown(extensions=[comments])
->>> print markdowner.convert("""\
-... text  <!---inline comment-->
-... <!---this line is ommitted entirely-->
-... more text<!---multiline comment
+>>> markdowner.convert("""\
+... blah blah blah  <!--- inline comment -->
+...
+... <!---multiline comment
 ... multiline comment
-... multiline comment-->even more text
-... """)
-<p>text</p>
-<p>more text></p>
-<p>even more text</p>
+... multiline comment-->
+...
+... even more text.""")
+u'<p>blah blah blah</p>\n<p>even more text.</p>'
 ```
