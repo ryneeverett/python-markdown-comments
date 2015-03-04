@@ -1,32 +1,29 @@
-"""
-A Python-Markdown preprocessor extension to ignore html comments opened by
-three dashes (<!---comment-->) and any whitespace prior to them. I believe
-pandoc has similar functionality.
-
-Note: This extension does not work with the markdownfromFile function or
-the convertFile method. They raise a UnicodeDecodeError.
-
-Note: If using multiple extensions, mkdcomments probably should be last in
-the list. Markdown extensions are loaded into the OrderedDict from which they
-are executed in the order of the extension list. If a different extension is
-loaded after mkdcomments, it may insert itself before mkdcomments in the
-OrderedDict. Undesirable results may ensue. If, for instance, the 'meta'
-extension is executed before mkdcomments, any comments in the meta-data will be
-included in meta's dictionary.
-"""
-
 import re
 from markdown.preprocessors import Preprocessor
+from markdown.postprocessors import Postprocessor
 from markdown.extensions import Extension
+
+
+PREFIX_PLACEHOLDER = "OMtxTKldR2f1LZ5Q"
 
 
 class CommentsExtension(Extension):
     def extendMarkdown(self, md, md_globals):
         md.registerExtension(self)
-        md.preprocessors.add("comments", CommentsProcessor(md), "_begin")
+        md.preprocessors.add(
+            "comment_munger", CommentMunger(md), "<html_block")
+        md.preprocessors.add(
+            "comment_remover", CommentRemover(md), ">html_block")
+        md.postprocessors.add(
+            "raw_comment_replacer", RawCommentReplacer(md), ">raw_html")
 
 
-class CommentsProcessor(Preprocessor):
+class CommentMunger(Preprocessor):
+    def run(self, lines):
+        return [re.sub(r'<!---', PREFIX_PLACEHOLDER, line) for line in lines]
+
+
+class CommentRemover(Preprocessor):
     def run(self, lines):
         new_lines = []
         is_multi = False
@@ -40,10 +37,10 @@ class CommentsProcessor(Preprocessor):
 
     def _uncommenter(self, line):
         # inline
-        line = re.sub(r'\s*<!---.*?-->', '', line)
+        line = re.sub(r'\s*' + PREFIX_PLACEHOLDER + r'.*?-->', '', line)
 
         # start multiline
-        line, count = re.subn(r'\s*<!---.*', '', line)
+        line, count = re.subn(r'\s*' + PREFIX_PLACEHOLDER + r'.*', '', line)
 
         return line, bool(count)
 
@@ -53,9 +50,16 @@ class CommentsProcessor(Preprocessor):
         # end multiline
         if count > 0:
             return self._uncommenter(new_line)
+
         # continue multiline
         else:
             return ('', True)
+
+
+class RawCommentReplacer(Postprocessor):
+    def run(self, text):
+        return re.sub(PREFIX_PLACEHOLDER, '<!---', text)
+
 
 def makeExtension(configs={}):
     return CommentsExtension(configs=configs)

@@ -1,7 +1,12 @@
 mkdcomments
 ===========
 
-A [Python-Markdown](https://github.com/waylan/Python-Markdown) preprocessor extension to ignore html comments opened by three dashes (`<!---comment-->`) and any whitespace prior to them. I believe pandoc has similar functionality.
+A [Python-Markdown](https://github.com/waylan/Python-Markdown) preprocessor extension to ignore html comments opened by three dashes and any whitespace prior to them. I believe pandoc has similar functionality.
+
+```html
+<!-- This is a standard html comment which will remain in the output. -->
+<!--- This is a markdown comment which this extension removes. -->
+```
 
 Installation
 ------------
@@ -9,13 +14,6 @@ Installation
 ```sh
 pip install git+https://github.com/ryneeverett/python-markdown-comments.git
 ```
-
-Usage Notes
------------
-+	This extension does not work with the `markdownfromFile` function or the `convertFile` method. They raise a UnicodeDecodeError.
-
-+	If using multiple extensions, mkdcomments probably should be last in the list. Markdown extensions are loaded into the OrderedDict from which they are executed in the order of the extension list. If a different extension is loaded after mkdcomments, it may insert itself before mkdcomments in the OrderedDict. Undesirable results may ensue. If, for instance, the 'meta' extension is executed before mkdcomments, any comments in the meta-data will be included in meta's dictionary.
-
 
 Example
 -------
