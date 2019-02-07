@@ -61,5 +61,5 @@ class RawCommentReplacer(Postprocessor):
         return re.sub(PREFIX_PLACEHOLDER, '<!---', text)
 
 
-def makeExtension(configs={}):
-    return CommentsExtension(configs=configs)
+def makeExtension():
+    return CommentsExtension()
