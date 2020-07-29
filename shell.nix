@@ -1,9 +1,22 @@
 let
   pkgs = import <nixpkgs> {};
-in
-pkgs.mkShell {
-  pname = "python-markdown-comments";
-  buildInputs = [
-    pkgs.pythonPackages.markdown
+  testDependencies = [
+    pkgs.python3Packages.setuptools
+    pkgs.mkdocs
   ];
-}
+  mkdcomments = pkgs.python3Packages.buildPythonPackage {
+    pname = "python-markdown-comments";
+    version = "master";
+    src = ./.;
+
+    buildInputs = [
+      pkgs.python3Packages.markdown
+    ];
+    checkInputs = testDependencies;
+  };
+in
+  pkgs.mkShell {
+    buildInputs = [
+      mkdcomments
+    ] ++ testDependencies;
+  }

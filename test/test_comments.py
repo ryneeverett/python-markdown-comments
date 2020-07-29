@@ -1,6 +1,9 @@
 import re
+import pathlib
 import unittest
 import textwrap
+import subprocess
+
 import markdown
 import mkdcomments
 
@@ -85,6 +88,12 @@ class TestComments(unittest.TestCase):
                  <!--- test --> testing 5 spaces
             </pre>"""
         self.assertExpectedMarkdown(md_input, md_input)
+
+    def test_mkdocs(self):
+        p = subprocess.run(
+            ['mkdocs', 'build'], cwd=pathlib.Path('./test/mkdocsproject'))
+        self.assertEqual(p.returncode, 0)
+
 
 if __name__ == '__main__':
     unittest.main()
