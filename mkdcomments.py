@@ -8,14 +8,14 @@ PREFIX_PLACEHOLDER = "OMtxTKldR2f1LZ5Q"
 
 
 class CommentsExtension(Extension):
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         md.registerExtension(self)
-        md.preprocessors.add(
-            "comment_munger", CommentMunger(md), "<html_block")
-        md.preprocessors.add(
-            "comment_remover", CommentRemover(md), ">html_block")
-        md.postprocessors.add(
-            "raw_comment_replacer", RawCommentReplacer(md), ">raw_html")
+        md.preprocessors.register(
+            CommentMunger(md), "comment_munger", 21)
+        md.preprocessors.register(
+            CommentRemover(md), "comment_remover", 19)
+        md.postprocessors.register(
+            RawCommentReplacer(md), "raw_comment_replacer", 29)
 
 
 class CommentMunger(Preprocessor):

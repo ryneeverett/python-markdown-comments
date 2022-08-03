@@ -17,11 +17,7 @@ class TestComments(unittest.TestCase):
     def assertExpectedMarkdown(self, md_input, expected_output):
         output = self.markdowner.convert(textwrap.dedent(md_input))
         expected = textwrap.dedent(expected_output)
-
-        try:
-            self.assertEqual(output, expected)
-        except AssertionError as e:
-            raise AssertionError('\n' + re.sub("' != '", '\n!=\n', e.message))
+        self.assertEqual(output, expected)
 
     def test_inline(self):
         md_input = 'text <!---inline comment-->'

@@ -3,6 +3,7 @@ let
   testDependencies = [
     pkgs.python3Packages.setuptools
     pkgs.mkdocs
+    pkgs.python3Packages.pytest
   ];
   mkdcomments = pkgs.python3Packages.buildPythonPackage {
     pname = "python-markdown-comments";
@@ -13,6 +14,7 @@ let
       pkgs.python3Packages.markdown
     ];
     checkInputs = testDependencies;
+    doCheck = false;
   };
 in
   pkgs.mkShell {
